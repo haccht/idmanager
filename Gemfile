@@ -73,3 +73,7 @@ group :test do
   gem "selenium-webdriver"
   gem "webdrivers"
 end
+
+gem "dotenv-rails"
+gem "net-ldap"
+gem "activeldap"
