@@ -74,6 +74,9 @@ group :test do
   gem "webdrivers"
 end
 
+gem 'net-ssh'
 gem "dotenv-rails"
+gem "passwordless"
+
 gem "net-ldap"
 gem "activeldap"

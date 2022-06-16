@@ -18,5 +18,19 @@ module Idmanager
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+    config.action_mailer.delivery_method = :smtp
+    config.action_mailer.default_url_options = {
+      host: 'localhost',
+      port: 3000,
+      only_path: false,
+      script_name: File.join(ENV['RAILS_RELATIVE_URL_ROOT'].to_s, '/'),
+    }
+    config.action_mailer.smtp_settings = {
+      address:              '192.168.1.1',
+      port:                 25,
+      authentication:       false,
+      domain:               'localhost',
+    }
+
   end
 end

@@ -1,10 +1,104 @@
-<h1>Editing user</h1>
+<% if notice then %>
+  <div class='alert alert-primary alert-dismissible fade show'>
+    <%= notice %>
+  </div>
+<% end %>
+<% unless @user.errors.empty? then %>
+  <div class='alert alert-danger alert-dismissible fade show'>
+    <% @user.errors.full_messages.each do |message| %>
+      <%= message %><br/>
+    <% end %>
+  </div>
+<% end %>
 
-<%= render "form", user: @user %>
-
-<br>
-
-<div>
-  <%= link_to "Show this user", @user %> |
-  <%= link_to "Back to users", users_path %>
+<div class='card mb-4'>
+  <div class='card-header bg-transparent'>
+    <div class='fs-4 mb-0'>
+      <i class='bi bi-person-badge'></i>
+      Profile
+    </div>
+  </div>
+  <ul class='list-group list-group-flush'>
+    <li class='list-group-item'>
+      <div class='row justify-content-between'>
+        <div class='col-3 fs-6'><div class='text-muted my-1'>account</div></div>
+        <div class='col-9 fs-5'><%= @user.uid %></div>
+      </div>
+    </li>
+    <li class='list-group-item'>
+      <div class='row justify-content-between'>
+        <div class='col-3 fs-6'><div class='text-muted my-1'>mail address</div></div>
+        <div class='col-9 fs-5'><%= @user.mail %></div>
+      </div>
+    </li>
+    <li class='list-group-item'>
+      <div class='row justify-content-between'>
+        <div class='col-3 fs-6'><div class='text-muted my-1'>uid</div></div>
+        <div class='col-9 fs-5'><%= @user.uid_number %></div>
+      </div>
+    </li>
+    <li class='list-group-item'>
+      <div class='row justify-content-between'>
+        <div class='col-3 fs-6'><div class='text-muted my-1'>groups</div></div>
+        <div class='col-9 fs-5'>
+          <% @user.groups.each do |group| %>
+            <span class='badge text-dark border'>
+              <i class="bi bi-tag"></i>
+              <%= group.cn %> (<%= group.gid_number %>)
+            </span>
+          <% end %>
+        </div>
+      </div>
+    </li>
+    <% if true %>
+      <li class='list-group-item'>
+        <div class='row justify-content-between'>
+          <div class='col-3 fs-6'><div class='text-muted my-1'>login shell</div></div>
+          <div class='col-9 fs-5'><%= @user.loginShell %></div>
+        </div>
+      </li>
+      <li class='list-group-item'>
+        <div class='row justify-content-between'>
+          <div class='col-3 fs-6'><div class='text-muted my-1'>home directory</div></div>
+          <div class='col-9 fs-5'><%= @user.homeDirectory %></div>
+        </div>
+      </li>
+    <% end %>
+  </ul>
 </div>
+
+<%= form_with(url: user_path(@user), method: :put) do |form| %>
+  <div class='card mb-4'>
+    <div class='card-header bg-transparent'>
+      <div class='fs-4 mb-0'>
+        <i class='bi bi-fingerprint'></i>
+        SSH Public Key (option)
+      </div>
+    </div>
+    <div class='card-body'>
+      <div class='col-auto px-3'>
+        <div class='form-group mb-3'>
+          <label>Public key</label>
+          <%= text_area :user, :ssh_public_key, rows: 5, class: 'form-control' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class='col-auto'>
+    <%= form.submit 'Update this profile', class: 'btn btn-primary' %>
+  </div>
+<% end %>
+
+<div class='fs-4 mt-5'>
+  <i class="bi bi-key"></i>
+  Change password
+</div>
+<%= link_to 'Change password', password_user_path(@user), class: 'btn btn-primary mt-2' %>
+
+<div class='fs-4 mt-5'>
+  <i class="bi bi-eraser"></i>
+  Delete profile
+</div>
+<p class='text-muted mb-0'>Once you delete your account, there is no going back.</p>
+<%= button_to 'Delete this profile', user_path(@user), method: 'delete', class: 'btn btn-danger mt-2', form: {data: {turbo_confirm: 'This will permanently delete this profile. Are you sure you wish to continue?'}} %>

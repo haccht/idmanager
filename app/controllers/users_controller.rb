@@ -1,31 +1,40 @@
 class UsersController < ApplicationController
-  before_action :set_user, only: %i[ show edit update destroy ]
+  before_action :require_session!
+  before_action :set_user, only: %i[ show edit update destroy edit_password update_password ]
 
   # GET /users or /users.json
   def index
-    @users = User.all
+    return redirect_to new_user_path unless current_user
+    redirect_to user_path(current_user)
   end
 
   # GET /users/1 or /users/1.json
   def show
+    respond_to do |format|
+      format.html { redirect_to edit_user_path(@user) }
+      format.json { render :show, status: :ok, location: @user }
+    end
   end
 
   # GET /users/new
   def new
     @user = User.new
+    @user.assign_attributes(cn: current_session.account)
   end
 
   # GET /users/1/edit
   def edit
+    return redirect_to user_path(current_user) unless current_user == @user
   end
 
   # POST /users or /users.json
   def create
-    @user = User.new(user_params)
+    @user = User.new
+    @user.assign_attributes(user_params.except('user_password_confirmation'))
 
     respond_to do |format|
-      if @user.save
-        format.html { redirect_to user_url(@user), notice: "User was successfully created." }
+      if @user.valid_password?(user_params['user_password_confirmation']) && @user.save
+        format.html { redirect_to user_url(@user), notice: "Profile was successfully created." }
         format.json { render :show, status: :created, location: @user }
       else
         format.html { render :new, status: :unprocessable_entity }
@@ -34,14 +43,36 @@ class UsersController < ApplicationController
     end
   end
 
-  # PATCH/PUT /users/1 or /users/1.json
+  # PUT /users/1 or /users/1.json
   def update
+    @user.assign_attributes(user_params.except('user_password', 'user_password_confirmation'))
+
     respond_to do |format|
-      if @user.update(user_params)
-        format.html { redirect_to user_url(@user), notice: "User was successfully updated." }
+      if @user.save
+        format.html { redirect_to user_url(@user), notice: "Profile was successfully updated." }
         format.json { render :show, status: :ok, location: @user }
       else
         format.html { render :edit, status: :unprocessable_entity }
+        format.json { render json: @user.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+  # GET /user/1/password
+  def edit_password
+  end
+
+  # PUT /user/1/password
+  def update_password
+    @user = current_user
+    @user.assign_attributes(user_params.except('user_password_confirmation'))
+
+    respond_to do |format|
+      if @user.valid_password?(user_params['user_password_confirmation']) && @user.save
+        format.html { redirect_to edit_user_url(@user), notice: "Password was successfully updated." }
+        format.json { render :show, status: :ok, location: @user }
+      else
+        format.html { render :edit_password, status: :unprocessable_entity }
         format.json { render json: @user.errors, status: :unprocessable_entity }
       end
     end
@@ -52,7 +83,7 @@ class UsersController < ApplicationController
     @user.destroy
 
     respond_to do |format|
-      format.html { redirect_to users_url, notice: "User was successfully destroyed." }
+      format.html { redirect_to users_url, notice: "Profile was successfully destroyed." }
       format.json { head :no_content }
     end
   end
@@ -60,11 +91,11 @@ class UsersController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_user
-      @user = User.find(params[:id])
+      @user = User.find(attribute: 'uidNumber', value: params[:id])
     end
 
     # Only allow a list of trusted parameters through.
     def user_params
-      params.fetch(:user, {})
+      params.require(:user).permit(:cn, :sn, :uid, :mail, :uid_number, :gid_number, :login_shell, :home_directory, :user_password, :user_password_confirmation, :ssh_public_key)
     end
 end

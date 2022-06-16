@@ -74,6 +74,7 @@ GEM
       tzinfo (~> 2.0)
     addressable (2.8.0)
       public_suffix (>= 2.0.2, < 5.0)
+    bcrypt (3.1.18)
     bindex (0.8.1)
     bootsnap (1.12.0)
       msgpack (~> 1.2)
@@ -132,7 +133,7 @@ GEM
     matrix (0.4.2)
     method_source (1.0.0)
     mini_mime (1.1.2)
-    minitest (5.15.0)
+    minitest (5.16.0)
     msgpack (1.5.2)
     net-imap (0.2.3)
       digest
@@ -149,9 +150,13 @@ GEM
       digest
       net-protocol
       timeout
+    net-ssh (6.1.0)
     nio4r (2.5.8)
     nokogiri (1.13.6-x86_64-linux)
       racc (~> 1.4)
+    passwordless (0.10.0)
+      bcrypt (~> 3.1.11)
+      rails (>= 5.1.4)
     prime (0.1.2)
       forwardable
       singleton
@@ -179,7 +184,7 @@ GEM
     rails-dom-testing (2.0.3)
       activesupport (>= 4.2.0)
       nokogiri (>= 1.6)
-    rails-html-sanitizer (1.4.2)
+    rails-html-sanitizer (1.4.3)
       loofah (~> 2.3)
     railties (7.0.3)
       actionpack (= 7.0.3)
@@ -207,7 +212,7 @@ GEM
       actionpack (>= 5.2)
       activesupport (>= 5.2)
       sprockets (>= 3.0.0)
-    sqlite3 (1.4.2)
+    sqlite3 (1.4.4)
     stimulus-rails (1.0.4)
       railties (>= 6.0.0)
     strscan (3.0.3)
@@ -235,7 +240,7 @@ GEM
     websocket-extensions (0.1.5)
     xpath (3.2.0)
       nokogiri (~> 1.8)
-    zeitwerk (2.5.4)
+    zeitwerk (2.6.0)
 
 PLATFORMS
   x86_64-linux
@@ -250,6 +255,8 @@ DEPENDENCIES
   jbuilder
   jsbundling-rails
   net-ldap
+  net-ssh
+  passwordless
   puma (~> 5.0)
   rails (~> 7.0.3)
   selenium-webdriver
