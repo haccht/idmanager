@@ -103,6 +103,7 @@ GEM
       railties (>= 3.2)
     erubi (1.10.0)
     fast_gettext (2.2.0)
+    foreman (0.87.2)
     forwardable (1.3.2)
     gettext (3.4.3)
       erubi
@@ -252,6 +253,7 @@ DEPENDENCIES
   cssbundling-rails
   debug
   dotenv-rails
+  foreman (~> 0.87.2)
   jbuilder
   jsbundling-rails
   net-ldap
