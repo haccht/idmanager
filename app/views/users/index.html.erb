@@ -1,16 +1,28 @@
-<p style="color: green"><%= notice %></p>
+<h1 class='h2 mb-3'>Profiles</h1>
 
-welcome <%= current_user.uid %>-san!
-
-<h1>Users</h1>
-
-<div id="users">
+<div id="users" class='row row-cols-3 g-3'>
   <% @users.each do |user| %>
-    <%= render user %>
-    <p>
-      <%= link_to "Show this user", user %>
-    </p>
+    <div class="col">
+      <div class="card">
+        <div class="card-body">
+          <h1 class="card-title h5">
+            <%= link_to user_path(user), class: 'text-dark text-decoration-none stretched-link' do %>
+              <i class='bi bi-person-badge'></i>
+              <%= user.cn %>
+              <% if current_user.uid_number == user.uid_number %>
+                <small>(you)</small>
+              <% end%>
+            <% end %>
+            <small class='text-muted'><%= user.uid_number %></small>
+          </h1>
+          <% user.groups.each do |group| %>
+            <span class='badge text-dark border'>
+              <i class="bi bi-tag"></i>
+              <%= group.cn %>
+            </span>
+          <% end %>
+        </div>
+      </div>
+    </div>
   <% end %>
 </div>
-
-<%= link_to "New user", new_user_path %>

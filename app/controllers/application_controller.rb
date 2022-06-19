@@ -1,6 +1,6 @@
 class ApplicationController < ActionController::Base
+  include Pundit::Authorization
   include Passwordless::ControllerHelpers
-
   helper_method :current_user, :current_session
 
   private

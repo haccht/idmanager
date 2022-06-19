@@ -77,7 +77,9 @@ end
 
 gem 'net-ssh'
 gem "dotenv-rails"
+
 gem "passwordless"
+gem "pundit"
 
 gem "net-ldap"
 gem "activeldap"
