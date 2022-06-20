@@ -13,12 +13,16 @@
     <div class="col-lg-7 mx-auto p-3">
       <header class="border-bottom pb-2 mb-5">
         <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-          <a href='/users' class='text-decoration-none text-dark me-auto'>
+          <a href='/users' class='text-decoration-none text-dark me-3'>
             <h1 class="fs-3 fw-light">
               <i class="bi bi-people"></i>
               ID Manager
             </h1>
           </a>
+          <ul class="nav me-auto">
+            <li><%= link_to 'Users',  users_path,  class: 'nav-link link-dark' %></li>
+            <li><%= link_to 'Groups', groups_path, class: 'nav-link link-dark' %></li>
+          </ul>
         </div>
       </header>
 

@@ -21,7 +21,7 @@ class User < ActiveLdap::Base
     self.sn   ||= self.cn
     self.uid  ||= self.cn
     self.mail ||= self.cn + '@' + ENV['SESSION_DOMAIN_NAME']
-    self.uid_number ||= (User.all.map(&:uid_number).max || 5000) + 1
+    self.uid_number ||= User.uid_next
     self.gid_number ||= Group.all.map(&:gid_number).min || 5000
     self.login_shell    ||= "/bin/bash"
     self.home_directory ||= "/home/#{self.cn}"
@@ -37,6 +37,10 @@ class User < ActiveLdap::Base
   after_save do
     self.primary_group.member_uid += [cn]
     self.primary_group.save!
+  end
+
+  def self.uid_next
+    self.all.map(&:uid_number).max&.+1 || 5000
   end
 
   def destroy

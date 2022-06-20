@@ -4,16 +4,24 @@ class GroupsController < ApplicationController
 
   # GET /groups or /groups.json
   def index
+    authorize Group
     @groups = Group.all
   end
 
   # GET /groups/1 or /groups/1.json
   def show
+    authorize Group
+    respond_to do |format|
+      format.html { redirect_to edit_group_path(@group) }
+      format.json { render :show, status: :ok, location: @group }
+    end
   end
 
   # GET /groups/new
   def new
+    authorize Group
     @group = Group.new
+    @group.assign_attributes(gid_number: Group.gid_next)
   end
 
   # GET /groups/1/edit
@@ -22,7 +30,9 @@ class GroupsController < ApplicationController
 
   # POST /groups or /groups.json
   def create
-    @group = Group.new(group_params)
+    authorize Group
+    @group = Group.new
+    @group.assign_attributes(group_params)
 
     respond_to do |format|
       if @group.save
@@ -37,8 +47,11 @@ class GroupsController < ApplicationController
 
   # PATCH/PUT /groups/1 or /groups/1.json
   def update
+    authorize Group
+    @group.assign_attributes(group_params)
+
     respond_to do |format|
-      if @group.update(group_params)
+      if @group.save
         format.html { redirect_to group_url(@group), notice: "Group was successfully updated." }
         format.json { render :show, status: :ok, location: @group }
       else
@@ -50,6 +63,7 @@ class GroupsController < ApplicationController
 
   # DELETE /groups/1 or /groups/1.json
   def destroy
+    authorize Group
     @group.destroy
 
     respond_to do |format|
@@ -61,11 +75,12 @@ class GroupsController < ApplicationController
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_group
-      @group = Group.find(params[:id])
+      @group = Group.find(attribute: 'gidNumber', value: params[:id])
     end
 
     # Only allow a list of trusted parameters through.
     def group_params
-      params.fetch(:group, {})
+      params[:group][:member_uid] ||= []
+      params.require(:group).permit(:cn, :gid_number, member_uid: [])
     end
 end

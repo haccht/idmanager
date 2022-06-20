@@ -9,7 +9,7 @@ class UsersController < ApplicationController
     return redirect_to new_user_path unless current_user
 
     authorize User
-    @users = User.all.sort_by{ |user| user.cn }
+    @users = User.all(order: 'asc')
   end
 
   # GET /users/1 or /users/1.json
@@ -48,7 +48,7 @@ class UsersController < ApplicationController
     end
   end
 
-  # PUT /users/1 or /users/1.json
+  # PATCH/PUT /users/1 or /users/1.json
   def update
     authorize @user
     @user.assign_attributes(user_params.except('user_password', 'user_password_confirmation'))
@@ -69,7 +69,7 @@ class UsersController < ApplicationController
     authorize @user
   end
 
-  # PUT /user/1/password
+  # PATCH/PUT /user/1/password
   def update_password
     authorize @user
     @user.assign_attributes(user_params.except('user_password_confirmation'))

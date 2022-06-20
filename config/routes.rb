@@ -3,8 +3,9 @@ Rails.application.routes.draw do
 
   resources :users do
     member do
-      get 'password', action: 'edit_password'
-      put 'password', action: 'update_password'
+      get   'password', action: 'edit_password'
+      put   'password', action: 'update_password'
+      patch 'password', action: 'update_password'
     end
   end
   resources :groups

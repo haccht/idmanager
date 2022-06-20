@@ -1,11 +1,11 @@
 class UserPolicy < ApplicationPolicy
 
   def index?
-    user.member_of?('wheel')
+    user.member_of?('admin')
   end
 
   def show?
-    user.member_of?('wheel') || user.uid_number == record.uid_number
+    user.member_of?('admin') || user.uid_number == record.uid_number
   end
 
   def new?
@@ -13,7 +13,7 @@ class UserPolicy < ApplicationPolicy
   end
 
   def edit?
-    user.member_of?('wheel') || user.uid_number == record.uid_number
+    user.member_of?('admin') || user.uid_number == record.uid_number
   end
 
   def edit_password?

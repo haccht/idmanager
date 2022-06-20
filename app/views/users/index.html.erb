@@ -1,28 +1,29 @@
-<h1 class='h2 mb-3'>Profiles</h1>
+<% if notice then %>
+  <div class='alert alert-primary alert-dismissible fade show'>
+    <%= notice %>
+  </div>
+<% end %>
+<h1 class='h2 mb-3'>Users</h1>
 
-<div id="users" class='row row-cols-3 g-3'>
+<div id="users" class='list-group'>
   <% @users.each do |user| %>
-    <div class="col">
-      <div class="card">
-        <div class="card-body">
-          <h1 class="card-title h5">
-            <%= link_to user_path(user), class: 'text-dark text-decoration-none stretched-link' do %>
-              <i class='bi bi-person-badge'></i>
-              <%= user.cn %>
-              <% if current_user.uid_number == user.uid_number %>
-                <small>(you)</small>
-              <% end%>
-            <% end %>
-            <small class='text-muted'><%= user.uid_number %></small>
-          </h1>
-          <% user.groups.each do |group| %>
-            <span class='badge text-dark border'>
-              <i class="bi bi-tag"></i>
-              <%= group.cn %>
-            </span>
-          <% end %>
-        </div>
+    <%= link_to user_path(user), class: 'list-group-item list-group-item-action d-flex justify-content-between' do %>
+      <div class='fs-5'>
+        <i class='bi bi-person-fill me-1'></i>
+        <span><%= user.cn %></span>
+        <% if current_user.uid_number == user.uid_number %>
+          <small>(you)</small>
+        <% end%>
+        <small class='fs-6 text-muted ms-1'><%= user.uid_number %></small>
       </div>
-    </div>
+      <div>
+        <% user.groups.reverse.each do |group| %>
+          <span class='badge text-dark border ms-1'>
+            <i class="bi bi-tag"></i>
+            <%= group.cn %>
+          </span>
+        <% end %>
+      </div>
+    <% end %>
   <% end %>
 </div>
