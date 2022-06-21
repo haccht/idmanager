@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   before_action :require_session!
   before_action :set_user, only: %i[ show edit update destroy edit_password update_password ]
 
-  rescue_from Pundit::NotAuthorizedError, with: :user_not_authorized
+  rescue_from Pundit::NotAuthorizedError, with: :not_authorized
 
   # GET /users or /users.json
   def index
@@ -23,6 +23,7 @@ class UsersController < ApplicationController
 
   # GET /users/new
   def new
+    authorize User
     @user = User.new
     @user.assign_attributes(cn: current_session.account)
   end
@@ -34,6 +35,7 @@ class UsersController < ApplicationController
 
   # POST /users or /users.json
   def create
+    authorize User
     @user = User.new
     @user.assign_attributes(user_params.except('user_password_confirmation'))
 
@@ -107,7 +109,7 @@ class UsersController < ApplicationController
       params.require(:user).permit(:cn, :sn, :uid, :mail, :uid_number, :gid_number, :login_shell, :home_directory, :user_password, :user_password_confirmation, :ssh_public_key)
     end
 
-    def user_not_authorized
+    def not_authorized
       flash[:alert] = "You are not authorized to perform this action."
       redirect_to user_path(current_user)
     end

@@ -2,6 +2,8 @@ class GroupsController < ApplicationController
   before_action :require_session!
   before_action :set_group, only: %i[ show edit update destroy ]
 
+  rescue_from Pundit::NotAuthorizedError, with: :not_authorized
+
   # GET /groups or /groups.json
   def index
     authorize Group
@@ -26,6 +28,7 @@ class GroupsController < ApplicationController
 
   # GET /groups/1/edit
   def edit
+    authorize Group
   end
 
   # POST /groups or /groups.json
@@ -82,5 +85,10 @@ class GroupsController < ApplicationController
     def group_params
       params[:group][:member_uid] ||= []
       params.require(:group).permit(:cn, :gid_number, member_uid: [])
+    end
+
+    def not_authorized
+      flash[:alert] = "You are not authorized to perform this action."
+      redirect_to user_path(current_user)
     end
 end

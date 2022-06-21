@@ -1,18 +1,24 @@
 <% if notice then %>
   <div class='alert alert-primary alert-dismissible fade show'>
     <%= notice %>
+    <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+  </div>
+<% end %>
+<% if alert then %>
+  <div class='alert alert-danger alert-dismissible fade show mb-2'>
+    <%= alert %>
+    <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
   </div>
 <% end %>
 <% unless @user.errors.empty? then %>
-  <div class="alert alert-danger alert-dismissible fade show">
+  <div class='alert alert-danger alert-dismissible fade show'>
     <% @user.errors.full_messages.each do |message| %>
       <%= message %><br/>
     <% end %>
   </div>
 <% end %>
 
-<p class='fs-5'> Please provide a password to create your profile.</p>
-
+<p class='fs-5'> Please provide a password to create your profile for <strong><%= current_session.mail %></strong>.</p>
 <%= form_with(url: users_path, method: :post) do |form| %>
   <%= hidden_field :user, :cn %>
   <div class='card mb-4'>

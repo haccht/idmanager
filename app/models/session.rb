@@ -7,7 +7,7 @@ class Session < ApplicationRecord
   end
 
   def mail
-    account + '@' + ENV['SESSION_DOMAIN_NAME']
+    account + '@ntt.com'
   end
 
   def self.fetch_resource_for_passwordless(account)

@@ -1,19 +1,19 @@
 class GroupPolicy < ApplicationPolicy
 
   def index?
-    user.member_of?('admin')
+    Group.admin.member?(user)
   end
 
   def show?
-    user.member_of?('admin')
+    Group.admin.member?(user)
   end
 
   def new?
-    user.member_of?('admin')
+    Group.admin.member?(user)
   end
 
   def edit?
-    user.member_of?('admin')
+    Group.admin.member?(user)
   end
 
 end

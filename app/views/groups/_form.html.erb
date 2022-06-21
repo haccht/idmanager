@@ -1,10 +1,17 @@
 <% if notice then %>
-  <div class='alert alert-primary alert-dismissible fade show'>
+  <div class='alert alert-primary alert-dismissible fade show mb-2'>
     <%= notice %>
+    <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+  </div>
+<% end %>
+<% if alert then %>
+  <div class='alert alert-danger alert-dismissible fade show mb-2'>
+    <%= alert %>
+    <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
   </div>
 <% end %>
 <% unless @group.errors.empty? then %>
-  <div class='alert alert-danger alert-dismissible fade show'>
+  <div class='alert alert-danger alert-dismissible fade show mb-2'>
     <% @group.errors.full_messages.each do |message| %>
       <%= message %><br/>
     <% end %>
@@ -23,13 +30,17 @@
       <div class='row form-group mb-3'>
         <label class='form-label col-2 text-muted'>name</label>
         <div class='col-10'>
-          <%= text_field :group, :cn, class: 'form-control' %>
+          <% if @group.cn.present? && (@group == Group.admin || @group == Group.member) %>
+            <%= text_field :group, :cn, class: 'form-control-plaintext px-2', readonly: true %>
+          <% else %>
+            <%= text_field :group, :cn, class: 'form-control' %>
+          <% end %>
         </div>
       </div>
       <div class='row form-group mb-3'>
         <label class='form-label col-2 text-muted'>gid</label>
         <div class='col-10'>
-          <%= text_field :group, :gid_number, readonly: true, class: 'form-control-plaintext px-2' %>
+          <%= text_field :group, :gid_number, class: 'form-control-plaintext px-2', readonly: true %>
         </div>
       </div>
       <div class='row form-group mb-3'>
@@ -38,7 +49,7 @@
           <ul class='list-group'>
             <% User.all(order: 'asc').each do |user| %>
               <li class='list-group-item'>
-                <%= check_box :group, :member_uid, {multiple: true, checked: user.member_of?(@group.cn), class: 'me-2'}, user.cn, nil %>
+                <%= check_box :group, :member_uid, {multiple: true, checked: @group.member?(user), class: 'me-2'}, user.cn, nil %>
                 <%= user.cn %>
               </li>
             <% end %>

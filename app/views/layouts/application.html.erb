@@ -7,6 +7,7 @@
     <%= csp_meta_tag %>
 
     <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= javascript_include_tag "application", "data-turbo-track": "reload", defer: true %>
   </head>
 
   <body>
@@ -19,10 +20,12 @@
               ID Manager
             </h1>
           </a>
-          <ul class="nav me-auto">
-            <li><%= link_to 'Users',  users_path,  class: 'nav-link link-dark' %></li>
-            <li><%= link_to 'Groups', groups_path, class: 'nav-link link-dark' %></li>
-          </ul>
+          <% if current_user && Group.admin.member?(current_user) %>
+            <ul class="nav me-auto">
+              <li><%= link_to 'Users',  users_path,  class: 'nav-link link-dark' %></li>
+              <li><%= link_to 'Groups', groups_path, class: 'nav-link link-dark' %></li>
+            </ul>
+          <% end %>
         </div>
       </header>
 
