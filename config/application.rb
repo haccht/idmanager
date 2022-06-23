@@ -18,18 +18,21 @@ module Idmanager
     #
     # config.time_zone = "Central Time (US & Canada)"
     # config.eager_load_paths << Rails.root.join("extras")
+    config.time_zone = 'Tokyo'
+    #config.active_job.queue_adapter = :sucker_punch
+
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.default_url_options = {
-      host: 'localhost',
+      host: '10.50.104.229',
       port: 3000,
       only_path: false,
       script_name: File.join(ENV['RAILS_RELATIVE_URL_ROOT'].to_s, '/'),
     }
     config.action_mailer.smtp_settings = {
-      address:              '192.168.1.1',
+      address:              'guard1.ssc-otemachi.ocn.ad.jp',
       port:                 25,
       authentication:       false,
-      domain:               'localhost',
+      domain:               'magi.ssc-otemachi.ocn.ad.jp',
     }
 
   end
