@@ -6,9 +6,9 @@ class Group < ActiveLdap::Base
   has_many :primary_users, class_name: 'User', foreign_key: 'gidNumber', primary_key: 'gidNumber'
 
   def self.admin
-    unless group = Group.first('administrator')
+    unless group = Group.first('admin')
       group = Group.new
-      group.update_attributes(cn: 'administrator',  gid_number: self.gid_next)
+      group.update_attributes(cn: 'admin',  gid_number: self.gid_next)
     end
     return group
   end
