@@ -2,6 +2,7 @@ class UsersController < ApplicationController
   before_action :require_session!
   before_action :set_user, only: %i[ show edit update destroy edit_password update_password ]
 
+  rescue_from Pundit::NotDefinedError, with: :not_authorized
   rescue_from Pundit::NotAuthorizedError, with: :not_authorized
 
   # GET /users or /users.json

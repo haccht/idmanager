@@ -2,6 +2,7 @@ class GroupsController < ApplicationController
   before_action :require_session!
   before_action :set_group, only: %i[ show edit update destroy ]
 
+  rescue_from Pundit::NotDefinedError, with: :not_authorized
   rescue_from Pundit::NotAuthorizedError, with: :not_authorized
 
   # GET /groups or /groups.json
