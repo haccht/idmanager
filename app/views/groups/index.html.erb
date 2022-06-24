@@ -12,14 +12,15 @@
 <% end %>
 
 <h1 class='h2 mb-3'>Groups</h1>
-<div id='group' class='list-group'>
+<div id='group' class='list-group list-group-numbered'>
   <% @groups.each do |group| %>
-    <%= link_to group_path(group), class: 'list-group-item list-group-item-action d-flex justify-content-between' do %>
-      <div class='fs-5'>
+    <%= link_to group_path(group), class: 'list-group-item list-group-item-action d-flex justify-content-between align-items-start' do %>
+      <div class='fs-5 me-auto'>
         <i class='bi bi-tag me-1'></i>
         <span><%= group.cn %></span>
         <small class='fs-6 text-muted ms-1'><%= group.gid_number %></small>
       </div>
+      <span class="badge bg-secondary rounded-pill"><%= group.users.size %> users</span>
     <% end %>
   <% end %>
 </div>

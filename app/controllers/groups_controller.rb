@@ -83,8 +83,8 @@ class GroupsController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def group_params
-      params[:group][:member_uid] ||= []
-      params.require(:group).permit(:cn, :gid_number, member_uid: [])
+      params[:group][:member] ||= []
+      params.require(:group).permit(:cn, :gid_number, member: [])
     end
 
     def not_authorized

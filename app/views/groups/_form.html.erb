@@ -31,11 +31,11 @@
       <div class='row form-group mb-3'>
         <label class='form-label col-2 text-muted'>name</label>
         <div class='col-10'>
-          <% if @group.cn.present? && (@group == Group.admin || @group == Group.member) %>
-            <%= text_field :group, :cn, class: 'form-control-plaintext px-2', readonly: true %>
-          <% else %>
-            <%= text_field :group, :cn, class: 'form-control' %>
-          <% end %>
+          <%= text_field(
+            :group, :cn,
+            class: "form-control#{'-plaintext' if !@group.new_entry? && @group.reserved?} px-2",
+            readonly: (!@group.new_entry? && @group.reserved?),
+          ) %>
         </div>
       </div>
       <div class='row form-group mb-3'>
@@ -45,12 +45,12 @@
         </div>
       </div>
       <div class='row form-group mb-3'>
-        <label class='form-label col-2 text-muted'>members</label>
+        <label class='form-label col-2 text-muted'>member</label>
         <div class='col-10'>
           <ul class='list-group'>
             <% User.all(order: 'asc').each do |user| %>
               <li class='list-group-item'>
-                <%= check_box :group, :member_uid, {multiple: true, checked: @group.member?(user), class: 'me-2'}, user.cn, nil %>
+                <%= check_box :group, :member, {multiple: true, checked: @group.member?(user), class: 'me-2'}, user.dn, nil %>
                 <%= user.cn %>
               </li>
             <% end %>

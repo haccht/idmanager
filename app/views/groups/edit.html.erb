@@ -5,4 +5,8 @@
   Delete group
 </div>
 <p class='text-muted mb-0'>Once you delete your account, there is no going back.</p>
-<%= button_to 'Delete this group', group_path(@group), method: 'delete', class: 'btn btn-danger mt-2', form: {data: {turbo_confirm: 'This will permanently delete this profile. Are you sure you wish to continue?'}} %>
+<%= button_to(
+  'Delete this group', group_path(@group), method: 'delete',
+  form: {data: {turbo_confirm: 'This will permanently delete this profile. Are you sure you wish to continue?'}},
+  class: "btn btn-danger mt-2 #{'disabled' if @group.reserved?}",
+) %>

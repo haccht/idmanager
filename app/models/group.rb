@@ -1,15 +1,14 @@
 class Group < ActiveLdap::Base
   include ActiveModel::Model
-  ldap_mapping dn_attribute: 'cn', prefix: 'ou=groups', classes: ['posixGroup']
+  ldap_mapping dn_attribute: 'cn', prefix: 'ou=groups', classes: ['posixGroup', 'groupOfNames']
 
-  has_many :primary_members, class_name: 'User', foreign_key: 'gidNumber', primary_key: 'gidNumber'
-  has_many :members,         class_name: 'User', primary_key: 'cn', wrap: 'memberUid'
+  has_many :users, class_name: 'User', wrap: 'member', primary_key: 'dn'
+  has_many :primary_users, class_name: 'User', foreign_key: 'gidNumber', primary_key: 'gidNumber'
 
   def self.admin
-    unless group = Group.first('admin')
+    unless group = Group.first('administrator')
       group = Group.new
-      group.update_attributes(cn: 'admin',  gid_number: self.gid_next)
-      group.save!
+      group.update_attributes(cn: 'administrator',  gid_number: self.gid_next)
     end
     return group
   end
@@ -18,7 +17,6 @@ class Group < ActiveLdap::Base
     unless group = Group.first('member')
       group = Group.new
       group.update_attributes(cn: 'member', gid_number: self.gid_next)
-      group.save!
     end
     return group
   end
@@ -27,18 +25,27 @@ class Group < ActiveLdap::Base
     self.all.map(&:gid_number).max&.+1 or 5000
   end
 
+  def reserved?
+    Group.admin == self || Group.member == self
+  end
+
   def append(user)
-    self.member_uid = [*self.member_uid, user.uid]
+    return if self.member?(user)
+
+    self.member = [*self.member] + [user.dn]
     self.save!
   end
 
   def remove(user)
-    self.member_uid = [*self.member_uid] - [user.uid]
+    return unless self.member?(user)
+    return destroy if self.member.size == 1
+
+    self.member = [*self.member] - [user.dn]
     self.save!
   end
 
   def member?(user)
-    self.member_uid.present? && self.member_uid.include?(user.uid)
+    [*self.member].include?(user.dn)
   end
 
   def destroy

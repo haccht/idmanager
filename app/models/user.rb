@@ -4,7 +4,7 @@ class User < ActiveLdap::Base
   include ActiveModel::Model
   ldap_mapping dn_attribute: 'cn', prefix: 'ou=users', classes: ['posixAccount', 'inetOrgPerson', 'ldapPublicKey']
 
-  belongs_to :groups,        class_name: 'Group', primary_key: 'cn', many: 'memberUid'
+  belongs_to :groups, class_name: 'Group', many: 'member', foreign_key: 'dn'
   belongs_to :primary_group, class_name: 'Group', foreign_key: 'gidNumber', primary_key: 'gidNumber'
 
   validate do
@@ -24,7 +24,7 @@ class User < ActiveLdap::Base
     self.uid_number ||= User.uid_next
     self.gid_number ||= Group.member.gid_number
     self.login_shell    ||= '/bin/bash'
-    self.home_directory ||= '/home/#{self.cn}'
+    self.home_directory ||= "/home/#{self.cn}"
   end
 
   before_save do
@@ -36,7 +36,7 @@ class User < ActiveLdap::Base
 
   after_save do
     Group.admin.append(self) if User.count == 1
-    self.primary_group.append(self)
+    Group.member.append(self)
   end
 
   def self.uid_next
