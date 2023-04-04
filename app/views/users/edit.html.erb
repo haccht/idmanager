@@ -1,0 +1,104 @@
+<% if notice then %>
+  <div class='alert alert-primary alert-dismissible fade show mb-2'>
+    <%= notice %>
+    <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+  </div>
+<% end %>
+<% if alert then %>
+  <div class='alert alert-danger alert-dismissible fade show mb-2'>
+    <%= alert %>
+    <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+  </div>
+<% end %>
+<% unless @user.errors.empty? then %>
+  <div class='alert alert-danger alert-dismissible fade show mb-2'>
+    <% @user.errors.full_messages.each do |message| %>
+      <%= message %><br/>
+    <% end %>
+    <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+  </div>
+<% end %>
+
+<div class='card mb-4'>
+  <div class='card-header bg-transparent'>
+    <div class='fs-4 mb-0'>
+      <i class='bi bi-person'></i>
+      User
+    </div>
+  </div>
+  <ul class='list-group list-group-flush'>
+    <li class='list-group-item'>
+      <div class='row justify-content-between'>
+        <div class='col-3 fs-6'><div class='text-muted my-1'>name</div></div>
+        <div class='col-9 fs-5'><%= @user.uid %></div>
+      </div>
+    </li>
+    <li class='list-group-item'>
+      <div class='row justify-content-between'>
+        <div class='col-3 fs-6'><div class='text-muted my-1'>mail address</div></div>
+        <div class='col-9 fs-5'><%= @user.mail %></div>
+      </div>
+    </li>
+    <li class='list-group-item'>
+      <div class='row justify-content-between'>
+        <div class='col-3 fs-6'><div class='text-muted my-1'>uid number</div></div>
+        <div class='col-9 fs-5'><%= @user.uid_number %></div>
+      </div>
+    </li>
+    <li class='list-group-item'>
+      <div class='row justify-content-between'>
+        <div class='col-3 fs-6'><div class='text-muted my-1'>gid number</div></div>
+        <div class='col-9 fs-5'><%= @user.gid_number %></div>
+      </div>
+    </li>
+    <li class='list-group-item'>
+      <div class='row justify-content-between'>
+        <div class='col-3 fs-6'><div class='text-muted my-1'>groups</div></div>
+        <div class='col-9 fs-5'>
+          <% @user.groups.each do |group| %>
+            <span class='badge text-dark border'>
+              <% if @user.gid_number == group.gid_number %>
+                <i class="bi bi-tag-fill"></i>
+              <% else %>
+                <i class="bi bi-tag"></i>
+              <% end %>
+              <%= group.cn %>
+            </span>
+          <% end %>
+        </div>
+      </div>
+    </li>
+    <% if false %>
+    <li class='list-group-item'>
+      <div class='row justify-content-between'>
+        <div class='col-3 fs-6'><div class='text-muted my-1'>login shell</div></div>
+        <div class='col-9 fs-5'><%= @user.login_shell %></div>
+      </div>
+    </li>
+    <li class='list-group-item'>
+      <div class='row justify-content-between'>
+        <div class='col-3 fs-6'><div class='text-muted my-1'>home directory</div></div>
+        <div class='col-9 fs-5'><%= @user.home_directory %></div>
+      </div>
+    </li>
+    <% end %>
+  </ul>
+</div>
+
+<% if current_user == @user %>
+  <div class='fs-4 mt-5'>
+    <i class='bi bi-key'></i>
+    Change password
+  </div>
+  <%= link_to 'Change password', password_user_path(@user), class: 'btn btn-primary mt-2' %>
+<% end %>
+
+<div class='fs-4 mt-5'>
+  <i class='bi bi-eraser'></i>
+  Delete account
+</div>
+<p class='text-muted mb-0'>Once you delete your account, there's no way to recover it.</p>
+<%= link_to(
+  'Delete this account', user_path(@user),
+  data: { turbo_method: :delete, turbo_confirm: "Are you sure you want to delete \"#{@user.uid}\" permanently?" },
+  class: "btn btn-danger mt-2" ) %>

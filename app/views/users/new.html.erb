@@ -1,0 +1,57 @@
+<% if notice then %>
+  <div class='alert alert-primary alert-dismissible fade show mb-2'>
+    <%= notice %>
+    <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+  </div>
+<% end %>
+<% if alert then %>
+  <div class='alert alert-danger alert-dismissible fade show mb-2'>
+    <%= alert %>
+    <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+  </div>
+<% end %>
+<% unless @user.errors.empty? then %>
+  <div class='alert alert-danger alert-dismissible fade show mb-2'>
+    <% @user.errors.full_messages.each do |message| %>
+      <%= message %><br/>
+    <% end %>
+    <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+  </div>
+<% end %>
+
+<p class='fs-5'> Please provide a new password for your <strong><%= current_session.mail %></strong> account.</p>
+<%= form_with(url: users_path, method: :post) do |form| %>
+  <%= hidden_field :user, :cn %>
+  <%= hidden_field :user, :sn %>
+  <%= hidden_field :user, :uid  %>
+  <%= hidden_field :user, :mail %>
+  <%= hidden_field :user, :uid_number %>
+  <%= hidden_field :user, :gid_number %>
+  <%= hidden_field :user, :home_directory %>
+  <div class='card mb-4'>
+    <div class='card-header bg-transparent'>
+      <div class='fs-4 mb-0'>
+        <i class='bi bi-key'></i>
+        Password
+      </div>
+    </div>
+    <div class='card-body'>
+      <div class='col-auto px-3'>
+        <div class='form-group mb-3'>
+          <label>New password</label>
+          <%= password_field :user, :user_password, class: 'form-control' %>
+        </div>
+      </div>
+      <div class='col-auto px-3'>
+        <div class='form-group mb-3'>
+          <label>Confirm password</label>
+          <%= password_field :user, :user_password_confirmation, class: 'form-control' %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class='col-auto'>
+    <%= form.submit 'Create your account', class: 'btn btn-primary' %>
+  </div>
+<% end %>

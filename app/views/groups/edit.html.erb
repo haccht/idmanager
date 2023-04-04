@@ -1,0 +1,11 @@
+<%= render 'form', group: @group, action: group_path(@group), method: :patch %>
+
+<div class='fs-4 mt-5'>
+  <i class='bi bi-eraser'></i>
+  Delete group
+</div>
+<p class='text-muted mb-0'>Once you delete your account, there's no way to recover it.</p>
+<%= link_to(
+  'Delete this group', group_path(@group),
+  data: {turbo_method: :delete, turbo_confirm: "Are you sure you want to delete \"#{@group.cn}\" permanently?"},
+  class: "btn btn-danger mt-2 #{'disabled' if @group == Group.admins || @group == Group.users}" ) %>

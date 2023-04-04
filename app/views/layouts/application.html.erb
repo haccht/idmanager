@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>ID Manager</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <%= csrf_meta_tags %>
+    <%= csp_meta_tag %>
+
+    <%= stylesheet_link_tag "application", "data-turbo-track": "reload" %>
+    <%= stylesheet_link_tag "bootstrap-icons", "data-turbo-track": "reload" %>
+    <%= javascript_importmap_tags %>
+  </head>
+
+  <body>
+    <div class="col-lg-7 mx-auto p-3">
+      <header class="border-bottom pb-2 mb-5">
+        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+          <% if controller_name == 'sessions' %>
+            <h1 class="fs-3 fw-light">
+              <i class="bi bi-people"></i>
+              ID Manager
+            </h1>
+          <% else %>
+            <%= link_to root_path, class: 'text-decoration-none text-dark me-3' do %>
+              <h1 class="fs-3 fw-light">
+                <i class="bi bi-people"></i>
+                ID Manager
+              </h1>
+            <% end %>
+          <% end %>
+          <% if current_user && Group.admins.include?(current_user) %>
+            <ul class="nav me-auto">
+              <li><%= link_to 'Users',  users_path,  class: 'nav-link link-dark' %></li>
+              <li><%= link_to 'Groups', groups_path, class: 'nav-link link-dark' %></li>
+            </ul>
+          <% end %>
+        </div>
+      </header>
+
+      <%= yield %>
+
+      <% if current_session %>
+        <footer class='py-3 my-5 border-top'>
+          <div class='text-center text-muted'>
+            <p class='mb-1'>You've logged in as <span class='fw-bold'><%= current_session.mail %></span> now.</p>
+            <%= link_to auth.sign_out_path do %>
+              logout
+            <% end %>
+          </div>
+        <footer>
+      <% end %>
+    </div>
+  </body>
+</html>

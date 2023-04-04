@@ -1,0 +1,73 @@
+<% if notice then %>
+  <div class='alert alert-primary alert-dismissible fade show mb-2'>
+    <%= notice %>
+    <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+  </div>
+<% end %>
+<% if alert then %>
+  <div class='alert alert-danger alert-dismissible fade show mb-2'>
+    <%= alert %>
+    <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+  </div>
+<% end %>
+<% unless @group.errors.empty? then %>
+  <div class='alert alert-danger alert-dismissible fade show mb-2'>
+    <% @group.errors.full_messages.each do |message| %>
+      <%= message %><br/>
+    <% end %>
+    <button type='button' class='btn-close' data-bs-dismiss='alert'></button>
+  </div>
+<% end %>
+
+<%= form_with(url: action, method: method) do |form| %>
+  <div class='card mb-4'>
+    <div class='card-header bg-transparent'>
+      <div class='fs-4 mb-0'>
+        <i class='bi bi-tag'></i>
+        Group
+      </div>
+    </div>
+    <ul class='list-group list-group-flush'>
+      <li class='list-group-item'>
+        <div class='row justify-content-between'>
+          <div class='col-3 fs-6'><label class='form-label text-muted my-1'>name</label></div>
+          <div class='col-9 fs-5'>
+            <%= text_field(
+              :group, :cn,
+              class: "form-control#{'-plaintext' if !@group.new_entry? && (@group == Group.admins || @group == Group.users)} px-2 py-0",
+              readonly: (!@group.new_entry? && (@group == Group.admins || @group == Group.users)),
+            ) %>
+          </div>
+        </div>
+      </li>
+      <li class='list-group-item'>
+        <div class='row justify-content-between'>
+          <div class='col-3 fs-6'><label class='form-label text-muted my-1'>gid number</label></div>
+          <div class='col-9 fs-5'>
+            <%= text_field :group, :gid_number, class: 'form-control-plaintext px-2 py-0', readonly: true %>
+          </div>
+        </div>
+      </li>
+      <li class='list-group-item'>
+        <div class='row justify-content-between'>
+          <div class='col-3 fs-6'><label class='form-label text-muted my-1'>members</label></div>
+          <div class='col-9'>
+            <ul class='list-group'>
+              <% User.all(order: 'asc').each do |user| %>
+                <li class='list-group-item'>
+                  <%= check_box :group, :uniqueMember, {multiple: true, checked: @group.include?(user), class: 'form-check-input me-2', disabled: (@group.cn.present? && @group == Group.users)}, user.dn, nil %>
+                  <label class='form-check-label'>
+                    <i class="bi bi-person"></i>
+                    <%= user.uid %>
+                  </label>
+                </li>
+              <% end %>
+            </ul>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <%= form.submit 'Submit group', class: 'btn btn-primary' %>
+<% end %>
