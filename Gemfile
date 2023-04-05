@@ -71,8 +71,12 @@ group :test do
   gem "webdrivers"
 end
 
+group :development do
+  gem "dotenv-rails"
+end
+
+gem "procsd"
 gem "bootstrap"
-gem "dotenv-rails"
 
 gem "pundit"
 gem "passwordless"

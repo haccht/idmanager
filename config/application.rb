@@ -21,6 +21,8 @@ module Idmanager2
     config.time_zone = 'Asia/Tokyo'
     config.hosts << ENV.fetch('RAILS_HOST', 'localhost')
 
+    config.active_record.sqlite3_production_warning=false
+
     config.action_mailer.delivery_method = :smtp
     config.action_mailer.default_url_options = {
       host:        ENV.fetch('RAILS_HOST', 'localhost'),

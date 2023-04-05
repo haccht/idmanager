@@ -36,3 +36,4 @@
 /config/master.key
 
 /.env
+/procsd.yml
